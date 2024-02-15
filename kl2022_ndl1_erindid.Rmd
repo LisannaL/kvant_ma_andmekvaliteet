@@ -1,0 +1,145 @@
+---
+title: 'Andmekvaliteedi hindamine: erindite analüüs'
+author: "Indrek Soidla"
+date: "11 2 2022"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: spacelab
+    highlight: tango
+    fig_cap: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Teeme läbi mõned erindite analüüsimise näited samade andmetega, mida kasutasin loenguslaididel.
+
+## Pakettide ja andmete laadimine
+
+Laeme sisse vajalikud paketid.
+
+```{r paketid, message = FALSE}
+library(haven)
+library(foreign)
+library(tidyverse)
+library(summarytools)
+```
+
+Laeme sisse Euroopa Sotsiaaluuringu Eesti 7. laine andmed (2014).
+
+```{r ess-andmed}
+ee7 <- read_sav("data/ESS7EE.sav")
+```
+
+Kui Maciga tekib probleeme andmete sisselugemisel või nende töötlemisel, võib proovida andmed sisse lugeda paketiga `foreign`.
+
+```{r ess-andmed-2}
+# ee7 <- read.spss("data/ESS7EE.sav", to.data.frame = TRUE, use.value.labels = FALSE)
+```
+
+Eraldame analüüsiks vajalikud tunnused.
+
+```{r}
+data <- ee7 %>% 
+  select(noimbro, eduyrs, gndr, brncntr, agea)
+```
+
+## Ühemõõtmelised erindid
+
+Uurime jaotusparameetreid.
+
+```{r andmed}
+descr(data$noimbro)
+freq(data$noimbro)
+```
+
+Mnjah, tunnuse jaotus pole eriti ülevaatlik, sest erinevaid väärtuseid on palju. Sellist tabelit võib ise uurida-puurida, aga teistele analüüsitulemustes esitada pole hea mõte. Vaatame tunnuse histogrammi ja karpdiagrammi, mis on kokkuvõtlikumad.
+
+```{r}
+hist(data$noimbro, breaks = 20)
+hist(data$noimbro, breaks = 40)
+
+boxplot(data$noimbro)
+```
+
+Kui palju on tunnuses erindeid karpdiagrammi / kvartiilhaarde põhjal?
+
+```{r}
+data %>% 
+  subset(noimbro > 60) %>% 
+  nrow()
+```
+
+Millised väärtused kvalifitseeruvad eelneva kriteeriumi alusel erandlikeks?
+
+```{r}
+data %>% 
+  subset(noimbro > 60, select = noimbro) %>% 
+  freq()
+```
+
+Arvutame ka z-skoorid, et nende põhjal erindeid uurida.
+
+```{r}
+data <- data %>% 
+  mutate(noimbro_z = as.numeric(scale(noimbro)))
+```
+
+Kui palju on erindeid z-skooride põhjal?
+
+```{r}
+freq(data$noimbro_z)
+```
+
+Näeme siit erindite jaotust, aga mitte eriti ülevaatlikult. Vaatame, kui palju on erindeid erinevate lävendite korral.
+
+```{r}
+data %>% 
+  subset(noimbro_z > 2.5, select = noimbro) %>% 
+  freq()
+
+data %>% 
+  subset(noimbro_z > 3, select = noimbro) %>% 
+  freq()
+
+data %>% 
+  subset(noimbro_z > 3.5, select = noimbro) %>% 
+  freq()
+```
+
+Harjutusülesanne: kas tunnuse noimbro poolest erandlike väärtustega indiviidid erinevad millegi poolest tavaväärtustega indiviididest? Kas mõne indiviidi puhul torkab midagi eripärast silma, mis aitaks mõista, mis võib erandliku väärtuse põhjuseks olla?
+
+```{r harjutusylesanne}
+data <- data %>% 
+  mutate(noimbro_erind = ifelse(noimbro_z > 3, 1, 0) %>% as.factor())
+
+data %>% 
+  group_by(noimbro_erind) %>% 
+  summarise(
+    naiste_osakaal = mean(gndr - 1),
+    immigr_osakaal = mean(brncntr - 1, na.rm = TRUE),
+    keskmine_haridus = mean(eduyrs, na.rm = TRUE),
+    mediaan_haridus = median(eduyrs, na.rm = TRUE),
+    keskmine_vanus = mean(agea, na.rm = TRUE),
+    mediaan_vanus = median(agea, na.rm = TRUE)
+  )
+```
+
+Keskmised ja mediaanid ei näita muidugi kogu tõde, aga nende põhjal võiks öelda, et sisserändajate osakaalu erandlikult suureks pidavate vastajate seas on rohkem naisi ja sisserändajaid ja mõnevõrra rohkem vanemaid inimesi.
+
+## Mitmemõõtmelised erindid
+
+Uurime, kas väljaspool Eestit sündinud inimeste tajutud osakaalu ja haridustee pikkuse väärtuste kombinatsioon võiks mõnede indiviidide puhul kvalifitseeruda erindina. Eeldame, et kõrgelt haritud vastajad võiksid osata immigratsiooni puudutavaid näitajaid adekvaatselt hinnata - kui ilmneb selle eeldusega tugevalt vastuolus olevaid väärtuste kombinatsioone, võiks neid käsitleda erandlikena.
+
+```{r}
+ggplot(data, aes(x = noimbro, y = eduyrs)) +
+  geom_count() +
+  geom_segment(x = 38, y = 18.5, xend = 38, yend = 33) +
+  geom_segment(x = 38, y = 18.5, xend = 90, yend = 18.5) +
+  xlab("Väljaspool Eestit sündinud inimeste tajutud osakaal riigis") +
+  ylab("Haridustee pikkus aastates")
+
+```
