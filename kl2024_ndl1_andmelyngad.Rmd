@@ -192,13 +192,13 @@ missing_pairs(andmed,
 
 -   Veergudes on kõik tunnused ehk tunnused nii nagu nende väärtused on andmestikus.
 
--   Y-teljel on samad tunnused, nagu on andmestikus, aga iga tunnuse kohta on 2 kategooriat: indiviidid, kelle on vastavas tunnuses valiidne väärtus e. andmelünka ei ole (sinine) ja indiviidid, kellel on andmelüngad (hall).
+-   Y-teljel on samad tunnused, nagu on andmestikus, aga iga tunnuse kohta on 2 kategooriat: indiviidid, kellel on vastavas tunnuses valiidne väärtus e. andmelünka ei ole (sinine) ja indiviidid, kellel on andmelüngad (hall).
 
-    -   Nt esimesel real on `lrscale` tunnus, mille alusel on tehtud 2 kategooriat: sinised näitavad teiste tunnuste (veergudes) jaotust, kelle lrscale tunnuses ei olnud andmelünki ja hallid näitavad nende veergudes olevate tunnuste jaotusi nende seas, kelle on lünk `lrscale` tunnuses
+    -   Nt esimesel real on `lrscale` tunnus, mille alusel on tehtud 2 kategooriat: sinised näitavad teiste tunnuste (veergudes) jaotust, kellel lrscale tunnuses ei olnud andmelünki ja hallid näitavad nende veergudes olevate tunnuste jaotusi nende seas, kellel on lünk `lrscale` tunnuses.
 
--   Vaadates karpdiagramme, saame võrrelda tunnuse jaotust. Tumedam joon karbi keskel on mediaan. Karbi külgede vahele jäävad 50% ehk pooled indiviidid. Vurrude pikkus näitab ülejäänud indiviidide jaotuse vahemikku. Eelneva näite põhjal: peaksime võrdlema siniseid ja halle diagramme, kui need on mingil määral erinevad, siis võime arvata, et lünklikkus on seotud näiteks vanusega `lrscale` tunnuses. Lünklikkus `lrscale` tunnuses on seotud väärtustega, mis on vanuse tunnuses. Ehk lünklikkus antud tunnuses ei ole täiesti juhuslik, vaid ta võib olla juhuslik.
+-   Vaadates **karpdiagramme**, saame võrrelda tunnuse jaotust. Tumedam joon karbi keskel on mediaan. Karbi külgede vahele jäävad 50% ehk pooled indiviidid. Vurrude pikkus näitab ülejäänud indiviidide jaotuse vahemikku. Eelneva näite põhjal: peaksime võrdlema siniseid ja halle diagramme, kui need on mingil määral erinevad, siis võime arvata, et lünklikkus `lrscale` tunnuses on seotud näiteks vanusega. Lünklikkus `lrscale` tunnuses on seotud väärtustega, mis on vanuse tunnuses ehk lünklikkus antud tunnuses ei ole täiesti juhuslik, vaid ta võib olla juhuslik.
 
--   Tulpdiagrammis näitavad tulba kõrgused indiviidide arvu, aga kuna tulbad on erinevad, siis hetkel need ei ole väga hästi võrreldavad. Parem oleks, kui tulp kokku teeks 100%.
+-   **Tulpdiagrammis** näitavad tulba kõrgused indiviidide arvu, aga kuna tulbad on erinevad, siis hetkel need ei ole väga hästi võrreldavad. Parem oleks, kui tulp kokku teeks 100%, et oleks lihtsam hinnata halli osa osakaalu tervest tulba kõrgusest..
 
 NB! Karpdiagrammid ei võimalda tunnuse jaotusest head ülevaadet saada, kui eristuvaid väärtuseid on vähe nagu skaalal 0-10 mõõdetud tunnuste puhul. Ka tuleb siniste ja hallide karpdiagrammide võrdlemisel silmas pidada, et enamikus tunnustest on andmelünki suhteliselt vähe (millele viitab hallide alade väiksus enamusel tulpdiagrammidest), nii et suured erinevused sama rea siniste ja hallide karpdiagrammide vahel võivad tuleneda hoopis juhuslikkusest. Teeme kohe ka mõned statistilised testid, et jälile jõuda, kas see nii võib olla, aga enne vaatame, mida siiski neist diagrammidest lünkade juhuslikkuse kohta järeldada saaksime.
 
@@ -213,7 +213,7 @@ missing_pairs(andmed,
 
 **Mida jooniselt välja lugeda saame?**
 
-`lrscale` tunnuses on soo lõikes lünkadega indiviidide osakaal suurem naiste puhul. Erinevus naiste ja meeste vahel on ka `brncntr` (kas on sündinud Eestis või mitte). Kui suur see täpselt on ja seda, kas lüklikkus on seotud mingi tunnusega, seda saame täpsemalt hinnata, kui vaadata konkreetsemaid jaotusparameetreid või teeme mingisuguse statistilise testi.
+`lrscale` tunnuses on soo lõikes lünkadega indiviidide osakaal suurem naiste puhul. Erinevus on ka `brncntr` (kas on sündinud Eestis või mitte) tunnuses. Kui suur see täpselt on ja seda, kas lüklikkus on seotud mingi tunnusega, seda saame täpsemalt hinnata, kui vaadata konkreetsemaid jaotusparameetreid või teeme mingisuguse statistilise testi.
 
 ## 4. Lünkade juhuslikkus: jaotus(parameetri)te võrdlus, statistilised testid
 
